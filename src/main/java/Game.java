@@ -35,6 +35,7 @@ public class Game {
 		System.out.println(END_MESSAGE);
 	}
 	
+	// 게임 초기화
 	private void init() {
 		setTargetNumber();
 	}
@@ -52,13 +53,14 @@ public class Game {
 		}
 	}
 	
+	// 게임 진행
 	private void run() {
 		while (gameStatus.equals(GameStatus.RUNNING)) {
 			setQuestion();
 		
 			String answer = getAnswer();
-			
-			setGameStatus(answer);
+			String result = getResult(answer);
+			setGameStatus(result);
 		}
 	}
 	
@@ -71,20 +73,16 @@ public class Game {
 		return scanner.nextLine();
 	}
 	
-	private void setGameStatus(String answer) {
-		String result = "";
-		
-		if (isValidAnswer(answer)) {
-			printResult(answer);
-		}
-		
+	private void setGameStatus(String result) {
 		if (result.equals(ANSWER_CLEAR)) {
 			gameStatus = GameStatus.CLEAR;
+			return;
 		}
 		
 		gameStatus = GameStatus.RUNNING;
 	}
 	
+	// 답변 유효성 체크
 	private boolean isValidAnswer(String s) {
 		if (isInteger(s) && has3Numbers(s)) {
 			return true;
@@ -110,11 +108,23 @@ public class Game {
 		return false;
 	}
 	
-	private void printResult(String answer) {
+	// 답변에 대한 결과 계산
+	private String getResult(String answer) {
+		String result = "";
+		
+		if (isValidAnswer(answer)) {
+			result = getResultMessage(answer);
+			System.out.println(result);
+		}
+		
+		return result;
+	}
+	
+	private String getResultMessage(String answer) {
 		List<Integer> answerNumber = convert(answer);
 		Map<ScoreType, Integer> result = getResultMap(answerNumber);
-		String printMessage = getPrintMessage(result);
-		System.out.println(printMessage);
+		String printMessage = getResultMessage(result);
+		return printMessage;
 	}
 	
 	private List<Integer> convert(String s) {
@@ -142,7 +152,7 @@ public class Game {
 	
 	private ScoreType getScoreType(int answerNumber, int index) {
 		if (answerNumber == targetNumber.get(index)) {
-			return ScoreType.STRIKE; 
+			return ScoreType.STRIKE;
 		}
 		
 		if (targetNumber.contains(answerNumber)) {
@@ -152,11 +162,11 @@ public class Game {
 		return ScoreType.NONE;
 	}
 	
-	private String getPrintMessage(Map<ScoreType, Integer> result) {
+	private String getResultMessage(Map<ScoreType, Integer> result) {
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		for (ScoreType scoreType : ScoreType.values()) {
-			stringBuilder.append(getPrintMessage(scoreType, result));
+			stringBuilder.append(getResultMessage(scoreType, result));
 		}
 		
 		if (stringBuilder.toString().isEmpty()) {
@@ -166,7 +176,7 @@ public class Game {
 		return stringBuilder.toString();
 	}
 	
-	private String getPrintMessage(ScoreType scoreType, Map<ScoreType, Integer> result) {
+	private String getResultMessage(ScoreType scoreType, Map<ScoreType, Integer> result) {
 		if (result.containsKey(scoreType)) {
 			int count = result.get(scoreType);
 			return scoreType.printWithScore(count);

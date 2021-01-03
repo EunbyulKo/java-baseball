@@ -53,8 +53,6 @@ public class GameRoom {
 		if (answer.equals(ANSWER_CLOSED)) {
 			gameRoomStatus = GameRoomStatus.CLOSED;
 		}
-		
-		gameRoomStatus = GameRoomStatus.WAITING_ANSWER;
 	}
 	
 	private void sayGoodBye() {
