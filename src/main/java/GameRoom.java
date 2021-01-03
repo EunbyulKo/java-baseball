@@ -14,14 +14,16 @@ public class GameRoom {
 	private GameRoomStatus gameRoomStatus = GameRoomStatus.OPEN;
 	
 	public void visit() {
+		scanner = new Scanner(System.in);
 		while (gameRoomStatus.equals(GameRoomStatus.OPEN)) {
 			Game game = new Game();
-			game.play();
+			game.play(scanner);
 
 			askIfExit();
 		}
 
 		sayGoodBye();
+		scanner.close();
 	}
 	
 	private void askIfExit() {
@@ -41,7 +43,6 @@ public class GameRoom {
 	}
 	
 	private String getAnswer() {
-		scanner = new Scanner(System.in);
 		return scanner.nextLine();
 	}
 	

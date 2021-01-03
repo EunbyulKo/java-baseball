@@ -25,9 +25,11 @@ public class Game {
 
 	private List<Integer> targetNumber;
 	
-	public void play() {
+	public void play(Scanner scanner) {
 		System.out.println(START_MESSAGE);
-
+		
+		this.scanner = scanner;
+		
 		init();
 		
 		run();
@@ -69,7 +71,6 @@ public class Game {
 	}
 	
 	private String getAnswer() {
-		scanner = new Scanner(System.in);
 		return scanner.nextLine();
 	}
 	
